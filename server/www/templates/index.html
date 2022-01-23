@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Bot{% endblock %}
+
+{% block body %}
+    <h4>Add account</h4>
+    <br>
+    <div class="row">
+        <div class="col">
+            <form method="post" action="{{ url_for("api.set_keys") }}">
+                <div class="form-group">
+                    <textarea name="private_keys_placeholder" class="form-control" id="private_keys_placeholder" rows="5"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+
+{% endblock %}
