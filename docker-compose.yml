@@ -1,0 +1,50 @@
+version: "3.3"
+services:
+#  postgres:
+#    container_name: tg_db_container
+#    image: postgres:13.3
+#    env_file:
+#      - 'docker.env'
+#    volumes:
+#      - ./db:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:latest
+    volumes:
+      - ./redis/etc/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/data
+      - ./redis/data/log/:/data/log
+      - ./redis/data/bases:/data/bases
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+#  admin:
+#    build: ./tg_admin/telegram_admin
+#    container_name: tg_admin_container
+#    depends_on:
+#      - postgres
+#      - redis
+#    volumes:
+#      - ./tg_admin/telegram_admin:/tg_admin
+#    env_file:
+#      - 'docker.env'
+#    ports:
+#      - "80:80"
+#    command: python manage.py runserver 0.0.0.0:80
+
+#  demom:
+#    build: ./demom
+#    command: python main.py
+#    container_name: demom
+#    depends_on:
+#      - redis
+##      - admin
+#    volumes:
+#      - ./demom:/demom
+#    env_file:
+#      - 'docker.env'

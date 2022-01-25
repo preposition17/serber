@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block title %}SERBER - settings{% endblock %}
+
+
+{% block body %}
+    <h3>Settings</h3>
+    <form>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Default</th>
+                <th scope="col">Current</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for item in settings %}
+                <tr>
+                    <td>
+                        {{ item.key }}
+                    </td>
+                    <td>
+                        {{ item.default }}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                   aria-describedby="emailHelp"
+                                   placeholder="{{ item.value }}">
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

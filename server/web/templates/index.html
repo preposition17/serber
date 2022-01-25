@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}SERBER - main{% endblock %}
+
+{% block body %}
+
+
+
+    <h5>Current contract: <i>{{ contract_account }}</i></h5>
+    <br>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Name</th>
+            <th scope="col">Drop Balance</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for account in accounts %}
+            <tr>
+                <td>{{ account.private_key }}</td>
+                <td>{{ account.name }}</td>
+                <td>{{ account.get_drop_balance(contract_account) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h4>Add account</h4>
+    <br>
+    <div class="row">
+        <div class="col">
+            <form method="post" action="{{ url_for("api.set_keys") }}">
+                <div class="form-group">
+                    <textarea name="private_keys_placeholder" class="form-control" id="private_keys_placeholder"
+                              rows="5"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+
+{% endblock %}
