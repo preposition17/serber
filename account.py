@@ -65,8 +65,18 @@ class Account:
 
 
     """ Actions """
-    def deposit_to_drop(self, drop):
-        current_balance = self.get_drop_balance(drop.contract_account)
+    def deposit_to_drop(self, drop, force=False, sio=None):
+        """
+        :param drop: AtomicDrop or NeftyDrop instance
+        :param force: if force == True: skip balance check proccess
+        :param: sio: SocketIo client
+        :return: None
+        """
+
+        if force:
+            current_balance = 0.0
+        else:
+            current_balance = self.get_drop_balance(drop.contract_account)
 
         if current_balance < drop.listing_price:
             data = {
@@ -78,11 +88,19 @@ class Account:
             response = send_transaction(self.cleos, self.key, self.name, "eosio.token", "transfer", data)
             if response["processed"]["error_code"] is None:
                 print(f"Deposit to drop in {drop.listing_price:.8f} WAX for account \"{self.name}\" successful")
+                if sio:
+                    sio.emit("debug_script", f"Deposit to drop in {drop.listing_price:.8f} WAX for account \"{self.name}\" successful")
             else:
                 print(f"Deposit to drop in {drop.listing_price:.8f} WAX for account \"{self.name}\" unsuccessful:"
                       f"{response}")
+                if sio:
+                    sio.emit("debug_script", f"Deposit to drop in {drop.listing_price:.8f} WAX for account \"{self.name}\" unsuccessful: "
+                                             f"{response}")
         else:
             print(f"Current balance of account \"{self.name}\" already equals {drop.listing_price:.8f} WAX")
+            if sio:
+                sio.emit("debug_script",
+                         f"Current balance of account \"{self.name}\" already equals {drop.listing_price:.8f} WAX")
             return 0
 
     def claim_drop(self, drop):
@@ -143,15 +161,21 @@ class Accounts:
         time.sleep(1)
 
 
-    def deposit_all(self, drop):
+    def deposit_all(self, drop, force=False, sio=None):
+        """
+        :param drop: AtomicDrop or NeftyDrop instance
+        :param force: if force == True: skip balance check proccess
+        :param sio: SocketIo client
+        :return: None
+        """
         for account in self.accounts:
-            thread = Thread(target=account.deposit_to_drop, args=(drop,))
+            thread = Thread(target=account.deposit_to_drop, args=(drop, force, sio))
             thread.start()
         time.sleep(1)
 
     def claim_all(self, drop):
         for account in self.accounts:
-            thread = Thread(target=account.claim_drop, args=(drop,))
+            thread = Thread(target=account.claim_drop, args=(drop))
             thread.start()
 
     def claim_with_assets_all(self, drop):

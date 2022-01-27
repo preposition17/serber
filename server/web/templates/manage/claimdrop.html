@@ -4,46 +4,108 @@
 
 {% block body %}
 
-<h3>Claim Drop</h3>
+    <h3>Claim Drop</h3>
 
-<form method="post"  action="{{ url_for('api.manage.test') }}">
-    <!--       -->
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="drop_ids_textarea">Drop Ids</label>
-                <textarea name="drop_ids_textarea" class="form-control" id="drop_ids_textarea"
+    {#    <form method="post" action="{{ url_for('api.manage.test') }}">#}
+    <form>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="drop_ids_textarea">Drop Ids</label>
+                    <textarea name="drop_ids_textarea" class="form-control" id="drop_ids_textarea"
+                              rows="5"></textarea>
+                </div>
+                <br>
+
+            </div>
+            <div class="col">
+                <label for="debug_log_console_textarea">Debug Log</label>
+                <textarea class="form-control" id="debug_log_console_textarea"
                           rows="5"></textarea>
             </div>
-            <br>
-
         </div>
-        <div class="col">
-            <label for="debug_log_console_textarea">Debug Log</label>
-            <textarea class="form-control" id="debug_log_console_textarea"
-                      rows="5">
-            </textarea>
-        </div>
-    </div>
-    <br>
-    {% for account in accounts %}
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="{{ account.name }}_account_checkbox"
-               name="{{ account.name }}_account_checkbox">
-        <label class="form-check-label" for="defaultCheck1">
-            {{ account.name }}
-        </label>
-    </div>
-    {% endfor %}
-    <hr>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="test_checkbox"
-               name="test_checkbox">
-        <label class="form-check-label" for="defaultCheck1">
-            Is test?
-        </label>
-    </div>
-    <button type="submit" class="btn btn-primary">Start</button>
-</form>
+        <br>
 
+        <div class="form-group">
+            <label for="drop_platform_select">Drop Platform</label>
+            <select class="form-control" id="drop_platform_select" name="drop_platform_select">
+                <option>AtomicHub</option>
+                <option>NeftyBlocks</option>
+            </select>
+        </div>
+
+        <div id="accounts_wrap">
+            {% for account in accounts %}
+                <div class="form-check">
+                    {#                <input class="form-check-input" type="checkbox" value={{ account.private_token }} id="{{ account.name }}_account_checkbox"#}
+                    {#                       name="{{ account.name }}_account_checkbox">#}
+                    <input class="form-check-input" type="checkbox"
+                           value={{ account.private_token }} id="{{ account.name }}_account_checkbox"
+                           name="accounts_checkbox">
+                    <label class="form-check-label" for="defaultCheck1">
+                        {{ account.name }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary" id="button_send_task">Start</button>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            // Listen to click event on the submit button
+            $('#button_send_task').click(function (e) {
+
+                e.preventDefault();
+
+                var drop_ids = $("#drop_ids_textarea").val();
+                var platform = $("#drop_platform_select").val();
+
+                var accounts = []
+                $("#accounts_wrap").find("input").each(function (i, item) {
+                    console.log(item)
+                    accounts.push(item.value)
+                })
+
+                $.ajax({
+                    type: "POST",
+                    url: Flask.url_for('api.manage.test'),
+                    data: {
+                        drop_ids: drop_ids,
+                        drop_platform: platform,
+                        accounts: accounts
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        console.log("Request sended")
+                    },
+                    error: function (result) {
+                        console.log("Error while sending request: " + result)
+                    }
+                })
+                console.log("Sending request...")
+            });
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+            integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+            crossorigin="anonymous"></script>
+    <script>
+        console.log("* Connecting to socket...")
+        var socket = io("http://127.0.0.1:5000");
+
+        socket.on('connect', function () {
+            console.log("* Socket connected");
+        });
+
+        socket.on('debug_console', function (data) {
+            console.log(data);
+            document.querySelector("#debug_log_console_textarea").value += data + "\n";
+        });
+
+    </script>
 {% endblock %}

@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_socketio import SocketIO
+from flask_jsglue import JSGlue
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -30,6 +32,12 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    socketio = SocketIO()
+    socketio.init_app(app)
+
+    jsglue = JSGlue()
+    jsglue.init_app(app)
+
     # Login manager
     from .models import UserModel
     login_manager = LoginManager()
@@ -59,8 +67,8 @@ def create_app():
     app.register_blueprint(api)
 
     # blueprint for websocket
-    from .ws import sock
-    app.register_blueprint(sock.bp)
+    from .manage import script_ws
+    app.register_blueprint(script_ws)
 
     return app
 
