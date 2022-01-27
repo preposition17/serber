@@ -1,13 +1,11 @@
 import os
 import json
+import time
 
 from werkzeug.utils import secure_filename
 
 from flask import Blueprint
 from flask import render_template
-
-from .models import db
-from .models import UrlModel
 
 
 utils = Blueprint('utils', __name__)
@@ -31,19 +29,6 @@ def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
     arguments = rule.arguments if rule.arguments is not None else ()
     return len(defaults) >= len(arguments)
-
-
-def set_all_urls(app):
-    urls = [item.path for item in UrlModel.query.all()]
-    for rule in app.url_map.iter_rules():
-        url = rule.rule
-        if url not in urls:
-            url = UrlModel(path=url)
-            db.session.add(url)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
 
 
 

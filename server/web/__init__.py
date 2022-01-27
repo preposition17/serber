@@ -4,12 +4,22 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
+from eospy.cleos import Cleos
+from api.api import Api
+import redis
+
 from .utils import check_db_file
-from .utils import set_all_urls
 
 
 db = SQLAlchemy()
 migrate = Migrate()
+
+url = "https://testnet.waxsweden.org"
+contract_account = "neftyblocksd"
+
+ce = Cleos(url=url)
+api = Api(url=url)
+redis_client = redis.Redis()
 
 
 def create_app():
@@ -48,6 +58,11 @@ def create_app():
     from .api import api
     app.register_blueprint(api)
 
-    # set_all_urls(app)
+    # blueprint for websocket
+    from .ws import sock
+    app.register_blueprint(sock.bp)
 
     return app
+
+
+

@@ -1,0 +1,65 @@
+*2
+$6
+SELECT
+$1
+0
+*3
+$5
+RPUSH
+$5
+tasks
+$64
+{"drop_ids": null, "accounts": ["testnetwaxx4", "testnetwaxx5"]}
+*3
+$5
+RPUSH
+$5
+tasks
+$74
+{"drop_ids": "5539\r\n6645", "accounts": ["testnetwaxx4", "testnetwax15"]}
+*3
+$5
+RPUSH
+$5
+tasks
+$80
+{"drop_ids": "555", "accounts": ["testnetwaxx4", "testnetwax15"], "test": false}
+*3
+$5
+RPUSH
+$5
+tasks
+$61
+{"drop_ids": "", "accounts": ["testnetwaxx4"], "test": false}
+*2
+$4
+LPOP
+$5
+tasks
+*2
+$4
+LPOP
+$5
+tasks
+*2
+$4
+LPOP
+$5
+tasks
+*2
+$4
+LPOP
+$5
+tasks
+*3
+$5
+RPUSH
+$5
+tasks
+$65
+{"drop_ids": "555", "accounts": ["testnetwaxx4", "testnetwax15"]}
+*2
+$4
+LPOP
+$5
+tasks

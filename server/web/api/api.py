@@ -4,6 +4,12 @@ from flask import request
 from flask import url_for
 from flask import redirect
 
+from .. import api as wax_api
+from .. import ce
+from .. import contract_account      # TODO: change to import from db
+
+from account import Account, Accounts
+
 from ..models import db
 from ..models import AccountModel
 
@@ -18,7 +24,8 @@ def set_keys():
     private_keys = form.split("\r\n")
 
     for private_key in private_keys:
-        account = AccountModel(private_token=private_key)
+        account = Account(wax_api, ce, private_key)
+        account = AccountModel(private_token=private_key, name=account.name)
         db.session.add(account)
     db.session.commit()
 

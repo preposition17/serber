@@ -3,22 +3,14 @@ from flask import render_template
 
 from .models import AccountModel
 from .models import Settings
-from .models import UrlModel
 
+from . import api
+from . import ce
+from . import contract_account      # TODO: change to import from db
 
-from eospy.cleos import Cleos
-from eospy.keys import EOSKey
-
-from api.api import Api
 
 from account import Account, Accounts
 from drop import AtomicDrop, NeftyDrop
-
-url = "https://testnet.waxsweden.org"
-contract_account = "neftyblocksd"
-
-ce = Cleos(url=url)
-api = Api(url=url)
 
 
 main = Blueprint('main', __name__)
@@ -38,13 +30,13 @@ def index_view():
                            accounts=accounts_list)
 
 
+@main.route('/add-accounts')
+def add_accounts_view():
+    return render_template("add-accounts.html")
+
+
 @main.route('/settings')
 def settings_view():
     settings = Settings.query.all()
     print(settings)
     return render_template("settings.html", settings=settings)
-
-
-@main.route('/manage')
-def manage_view():
-    return render_template("manage.html")

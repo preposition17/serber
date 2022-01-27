@@ -6,4 +6,44 @@
 
 <h3>Claim Drop</h3>
 
+<form method="post"  action="{{ url_for('api.manage.test') }}">
+    <!--       -->
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="drop_ids_textarea">Drop Ids</label>
+                <textarea name="drop_ids_textarea" class="form-control" id="drop_ids_textarea"
+                          rows="5"></textarea>
+            </div>
+            <br>
+
+        </div>
+        <div class="col">
+            <label for="debug_log_console_textarea">Debug Log</label>
+            <textarea class="form-control" id="debug_log_console_textarea"
+                      rows="5">
+            </textarea>
+        </div>
+    </div>
+    <br>
+    {% for account in accounts %}
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="{{ account.name }}_account_checkbox"
+               name="{{ account.name }}_account_checkbox">
+        <label class="form-check-label" for="defaultCheck1">
+            {{ account.name }}
+        </label>
+    </div>
+    {% endfor %}
+    <hr>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="test_checkbox"
+               name="test_checkbox">
+        <label class="form-check-label" for="defaultCheck1">
+            Is test?
+        </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Start</button>
+</form>
+
 {% endblock %}
