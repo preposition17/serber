@@ -16,6 +16,7 @@ def error_404(error):
     return render_template('404.html'), 404
 
 
+
 def check_db_file(app, db, database_path):
     if os.path.exists(database_path):
         print("* DB file exist")

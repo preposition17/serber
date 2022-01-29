@@ -6,11 +6,9 @@ import threading
 from dotenv import load_dotenv
 
 import redis
-import websocket
 import socketio
 
 from eospy.cleos import Cleos
-from eospy.keys import EOSKey
 
 from api.api import Api
 

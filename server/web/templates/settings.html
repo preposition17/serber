@@ -11,8 +11,8 @@
             <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Default</th>
                 <th scope="col">Current</th>
+                <th scope="col">Choose</th>
             </tr>
             </thead>
 
@@ -20,16 +20,27 @@
             {% for item in settings %}
                 <tr>
                     <td>
-                        {{ item.key }}
+                        {{ item.name }}
                     </td>
                     <td>
-                        {{ item.default }}
+                        {{ item.current }}
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="email" class="form-control" id="exampleInputEmail1"
-                                   aria-describedby="emailHelp"
-                                   placeholder="{{ item.value }}">
+                            {% if item.is_input %}
+                                <input type="text" class="form-control" id="{{ item.key }}_input"
+                                       name="{{ item.key }}_input" placeholder="{{ item.value }}">
+
+                            {% elif item.is_select %}
+                                {% set value = json_loads(item.value) %}
+                                <select class="form-control" id="{{ item.key }}_select">
+                                    {% for item in value %}
+                                        <option value="{{ item.value }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% endif %}
+
                         </div>
                     </td>
                 </tr>

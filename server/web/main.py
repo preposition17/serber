@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import render_template
+from flask import current_app
 
 from .models import AccountModel
 from .models import Settings
@@ -8,9 +9,7 @@ from . import api
 from . import ce
 from . import contract_account      # TODO: change to import from db
 
-
-from account import Account, Accounts
-from drop import AtomicDrop, NeftyDrop
+from account import Account
 
 
 main = Blueprint('main', __name__)
@@ -40,3 +39,4 @@ def settings_view():
     settings = Settings.query.all()
     print(settings)
     return render_template("settings.html", settings=settings)
+

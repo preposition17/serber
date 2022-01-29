@@ -11,6 +11,7 @@ from api.api import Api
 import redis
 
 from .utils import check_db_file
+from .jinja_utils import cstm_context_processor
 
 
 db = SQLAlchemy()
@@ -69,6 +70,10 @@ def create_app():
     # blueprint for websocket
     from .manage import script_ws
     app.register_blueprint(script_ws)
+
+    @app.context_processor
+    def context_processor():
+        return cstm_context_processor()
 
     return app
 

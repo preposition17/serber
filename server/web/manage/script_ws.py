@@ -9,7 +9,7 @@ script_ws = IOBlueprint("script_ws", __name__)
 
 @script_ws.on('connect')
 def connect():
-    print("Connected")
+    print("* WS client: connected")
 
 
 @script_ws.on('debug_script')
@@ -22,5 +22,5 @@ def connect(data):
 
 @script_ws.on('message')
 def connect(data):
-    print("New message: " + data["data"])
+    print("* WS client: New message: " + data["data"])
 
