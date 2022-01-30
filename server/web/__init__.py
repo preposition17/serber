@@ -59,6 +59,10 @@ def create_app():
     from .main import main
     app.register_blueprint(main)
 
+    # blueprint for main
+    from .settings import settings
+    app.register_blueprint(settings)
+
     # blueprint for manage
     from .manage import manage
     app.register_blueprint(manage)

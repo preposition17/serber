@@ -48,6 +48,13 @@ class Account:
         else:
             return 0
 
+    @property
+    def full_data(self):
+        data = self.api.get_account(self.name)
+        data["atomic_drop_balance"] = self.get_drop_balance("atomicdropsx")
+        data["nefty_drop_balance"] = self.get_drop_balance("neftyblocksd")
+        return data
+
 
     def get_assets(self):
         if self.assets is None:
@@ -149,9 +156,16 @@ class Account:
 
 
 class Accounts:
-    def __init__(self, acconuts: list):
-        self.accounts = acconuts
+    def __init__(self, accounts: list):
+        self.accounts = accounts
         self.que = Queue()
+
+
+    # @staticmethod
+    # def get_info_by_names(api, account_names: list):
+    #     data = list()
+    #     for name in account_names:
+
 
 
     def set_assets_all(self):

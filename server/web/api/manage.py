@@ -26,7 +26,6 @@ def test():
         "drop_type": "claimdrop",
         "drop_platform": drop_platform,
         "drop_ids": drop_ids,
-        # "accounts": [item.split("_")[0] for item in form_data if "account" in item]
         "accounts": accounts
     }
 

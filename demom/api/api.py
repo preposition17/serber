@@ -48,15 +48,6 @@ class Api:
         return response.json()
 
 
-    def push_transaction(self, transaction_data):
-        if 'expiration' not in transaction_data:
-            transaction_data['expiration'] = str((datetime.datetime.utcnow() + datetime.timedelta(seconds=30)).replace(tzinfo=pytz.UTC))
-        if 'ref_block_num' not in transaction_data:
-            transaction_data['ref_block_num'] = transaction_data['last_irreversible_block_num'] & 0xFFFF
-        if 'ref_block_prefix' not in transaction_data:
-            transaction_data['ref_block_prefix'] = transaction_data['ref_block_prefix']
-
-
 
 if __name__ == '__main__':
     api = Api("https://testnet.waxsweden.org/")

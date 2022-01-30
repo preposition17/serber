@@ -11,21 +11,37 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th scope="col">Key</th>
             <th scope="col">Name</th>
+            <th scope="col">Updated</th>
             <th scope="col">Drop Balance</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Staked CPU</th>
+            <th scope="col">Staked RAM</th>
+            <th scope="col">Key</th>
         </tr>
         </thead>
         <tbody>
         {% for account in accounts %}
             <tr>
-                <td>{{ account.private_key }}</td>
                 <td>{{ account.name }}</td>
-                <td>{{ account.get_drop_balance(contract_account) }}</td>
+                <td>{{ account.update_time }}</td>
+                {% if contract_account == "neftyblocksd" %}
+                    <td>{{ account.nefty_drop_balance }}</td>
+                {% elif contract_account == "neftyblocksd" %}
+                    <td>{{ account.atomic_drop_balance }}</td>
+                {% endif %}
+                <td>{{ account.balance }}</td>
+                <td>{{ account.cpu }}</td>
+                <td>{{ account.ram }}</td>
+                <td>...{{ account.private_token[-10:] }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <button type="button" class="btn btn-primary" name="update_button" id="update_button">Update</button>
+    <br>
+    <br>
 
 
     <h4>Add account</h4>
@@ -46,4 +62,31 @@
         </div>
     </div>
 
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            // Listen to click event on the submit button
+            $('#update_button').click(function (e) {
+
+                e.preventDefault();
+
+
+                $.ajax({
+                    type: "POST",
+                    url: Flask.url_for('api.update_accs_info'),
+                    dataType: "json",
+                    success: function (result) {
+                        console.log("Request sended")
+                    },
+                    error: function (result) {
+                        console.log("Error while sending request: " + result)
+                    }
+                })
+                console.log("Sending request...")
+            });
+        });
+    </script>
 {% endblock %}
