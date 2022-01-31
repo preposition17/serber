@@ -1,12 +1,16 @@
+import json
+
 from flask import Blueprint
 
 from flask import request
 from flask import url_for
 from flask import redirect
+from flask import jsonify
 
 from .. import api as wax_api
 from .. import ce
 from .. import contract_account      # TODO: change to import from db
+from .. import redis_client
 
 from account import Account, Accounts
 
@@ -30,3 +34,15 @@ def set_keys():
     db.session.commit()
 
     return redirect(url_for("main.index_view"))
+
+
+@api.route('/update_accs_info', methods=["POST"])
+def update_accs_info():
+
+    # accounts = AccountModel.query.all()
+    data = {
+        "action": "update_accounts_data"
+    }
+    redis_client.rpush("tasks", json.dumps(data))
+
+    return jsonify({"success": True})

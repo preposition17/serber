@@ -15,6 +15,8 @@ from api.api import Api
 from account import Account, Accounts
 from drop import AtomicDrop, NeftyDrop
 
+from tasks import update_accounts_data
+
 
 if os.getenv("DEBUG") == "1":
     load_dotenv()
@@ -75,8 +77,6 @@ def main_worker():
     print("* DEMOM started")
     sio.emit("debug_script", "* DEMOM started")
     while True:
-
-
         command = redis_client.lpop("tasks")
         if command:
             command = json.loads(command.decode("UTF-8"))
@@ -87,6 +87,11 @@ def main_worker():
                                                       command["drop_ids"],
                                                       command["accounts"]))
                 claim_thread.start()
+            if command["action"] == "update_accounts_data":
+                accounts_data_updating_thread = threading.Thread(target=update_accounts_data,
+                                                                 args=(api, ce))
+                accounts_data_updating_thread.start()
+
 
         time.sleep(1)
 

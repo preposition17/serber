@@ -1,15 +1,8 @@
-import os
-import threading
-
-from flask import current_app
-from flask import url_for
+from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy.exc import IntegrityError
 
 from . import db
-
-from .utils import check_db_file
 
 
 class UserModel(UserMixin, db.Model):
@@ -26,6 +19,12 @@ class AccountModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     private_token = db.Column(db.String(100), nullable=False, unique=True)
     name = db.Column(db.String(12), nullable=False, unique=True)
+    atomic_drop_balance = db.Column(db.Float)
+    nefty_drop_balance = db.Column(db.Float)
+    balance = db.Column(db.Float)
+    cpu = db.Column(db.Float)
+    ram = db.Column(db.Float)
+    update_time = db.Column(db.DateTime, default=datetime.utcnow())
 
     # disabled = False
 
