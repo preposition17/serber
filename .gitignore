@@ -151,3 +151,5 @@ crashlytics-build.properties
 fabric.properties
 
 ./server/web/wax.db
+./price_bot
+/price_bot

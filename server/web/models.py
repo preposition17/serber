@@ -50,4 +50,4 @@ def has_no_empty_params(rule):
     return len(defaults) >= len(arguments)
 
 
-# db.create_all(app=current_app)
+db.create_all(app=current_app)
