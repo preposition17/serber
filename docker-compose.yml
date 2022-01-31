@@ -6,7 +6,7 @@ services:
     env_file:
       - 'docker.env'
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - db_volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -22,7 +22,9 @@ services:
     ports:
       - "6379:6379"
     command: redis-server /usr/local/etc/redis/redis.conf
-
+volumes:
+  db_volume:
+    external: true
 #  admin:
 #    build: ./tg_admin/telegram_admin
 #    container_name: tg_admin_container
