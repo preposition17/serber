@@ -3,10 +3,9 @@ import time
 import json
 import threading
 
-from dotenv import load_dotenv
 
-import redis
 import socketio
+
 
 from eospy.cleos import Cleos
 
@@ -16,59 +15,20 @@ from account import Account, Accounts
 from drop import AtomicDrop, NeftyDrop
 
 from tasks import update_accounts_data
+from tasks import claim_drop
 
 
-if os.getenv("DEBUG") == "1":
-    load_dotenv()
+from redis_client import get_redis_client
+
+from settings import Settings
+import config
 
 
-url = "https://testnet.waxsweden.org"
-ce = Cleos(url=url)
-api = Api(url=url)
+settings = Settings()
 
-
-redis_client = redis.Redis(host=os.getenv("REDIS_HOST"))
-if not redis_client.ping():
-    print("Redis not responding")
-    exit()
-
-
+redis_client = get_redis_client()
 sio = socketio.Client()
-
-
-def claim_drop(drop_platform, drop_ids, accounts_keys):
-    sio.emit("debug_script", "* Claimdrop task received")
-    if drop_platform == "neftyblocks":
-        drops = [NeftyDrop(ce, drop_id) for drop_id in drop_ids]
-    elif drop_platform == "atomichub":
-        drops = [AtomicDrop(ce, drop_id) for drop_id in drop_ids]
-    else:
-        sio.emit("debug_script", "! Error while drops initializing")
-        return
-
-    sio.emit("debug_script", "* Drops initialized")
-    accounts = Accounts([Account(api, ce, key) for key in accounts_keys])
-    sio.emit("debug_script", "* Accounts initialized")
-
-    for drop in drops:
-        accounts.deposit_all(drop, True, sio)
-
-    sio.emit("debug_script", "* Accounts deposited")
-
-    def claim(drop):
-        if drop.start_time > time.time():
-            print("The drop has not started yet, waiting...")
-            sio.emit("debug_script", "* The drop has not started yet, waiting...")
-
-        while drop.start_time - time.time() > 0:
-            continue
-
-        accounts.claim_all(drop)
-
-    for drop in drops:
-        claim_thread = threading.Thread(target=claim, args=(drop,))
-        claim_thread.start()
-
+sio_config = config.SocketIoConfig()
 
 
 def main_worker():
@@ -83,13 +43,14 @@ def main_worker():
             print(command)
             if command["action"] == "claim":
                 claim_thread = threading.Thread(target=claim_drop,
-                                                args=(command["drop_platform"],
+                                                args=(settings,
                                                       command["drop_ids"],
-                                                      command["accounts"]))
+                                                      command["accounts"],
+                                                      sio))
                 claim_thread.start()
             if command["action"] == "update_accounts_data":
                 accounts_data_updating_thread = threading.Thread(target=update_accounts_data,
-                                                                 args=(api, ce))
+                                                                 args=(settings,))
                 accounts_data_updating_thread.start()
 
 
@@ -97,10 +58,12 @@ def main_worker():
 
 
 if __name__ == '__main__':
-    sio.connect('http://127.0.0.1:5000/')
+    sio.connect(sio_config.SOCKETIO_HOST)
 
     main_worker_thread = threading.Thread(target=main_worker)
     main_worker_thread.start()
+
+    settings.updater_start()
 
     sio.wait()
 

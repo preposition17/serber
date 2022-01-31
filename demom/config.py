@@ -17,3 +17,11 @@ class DBConfig:
     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
     POSTGRES_HOST = os.getenv("POSTGRES_HOST")
 
+
+class RedisConfig:
+    REDIS_HOST = os.getenv("REDIS_HOST")
+
+
+class SocketIoConfig:
+    SOCKETIO_HOST = os.getenv("SOCKETIO_HOST")
+

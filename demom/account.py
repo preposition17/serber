@@ -189,12 +189,12 @@ class Accounts:
 
     def claim_all(self, drop):
         for account in self.accounts:
-            thread = Thread(target=account.claim_drop, args=(drop))
+            thread = Thread(target=account.claim_drop, args=(drop,))
             thread.start()
 
     def claim_all_multi(self, drops: list):
         for account in self.accounts:
-            thread = Thread(target=account.claim_drop, args=(drop))
+            thread = Thread(target=account.claim_drop, args=(drops,))
             thread.start()
 
     def claim_with_assets_all(self, drop):

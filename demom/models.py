@@ -22,6 +22,7 @@ Session = sessionmaker(engine)
 
 class Models:
     WaxAccount = AutomapBase.classes.wax_account
+    Settings = AutomapBase.classes.settings
 
 
 models = Models()

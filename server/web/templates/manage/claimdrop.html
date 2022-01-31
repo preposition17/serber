@@ -59,7 +59,9 @@
                 var accounts = []
                 $("#accounts_wrap").find("input").each(function (i, item) {
                     console.log(item)
-                    accounts.push(item.value)
+                    if (item.checked) {
+                        accounts.push(item.value)
+                    }
                 })
 
                 $.ajax({

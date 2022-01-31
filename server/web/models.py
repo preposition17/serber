@@ -24,7 +24,7 @@ class AccountModel(db.Model):
     balance = db.Column(db.Float)
     cpu = db.Column(db.Float)
     ram = db.Column(db.Float)
-    update_time = db.Column(db.DateTime, default=datetime.utcnow())
+    update_time = db.Column(db.DateTime, default=datetime.now())
 
     # disabled = False
 
