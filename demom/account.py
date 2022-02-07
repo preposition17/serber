@@ -114,7 +114,7 @@ class Account:
         data = {
             "claimer": self.name,
             "drop_id": drop.drop_id,
-            "amount": 1,
+            "claim_amount": 1,
             "intended_delphi_median": 0,
             "referrer": drop.referrer,
             "country": "RU",

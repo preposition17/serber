@@ -10,6 +10,7 @@ from account import Account
 cleos = Cleos(url="https://testnet.waxsweden.org")
 api = Api(url="https://testnet.waxsweden.org")
 
+
 acc = Account(api, cleos, "5JWBoukx5cbE2f8FEKGdgcacGESwPeVgUVe6ipdoqnCbx3HYyjF")
 print(acc.get_drop_balance("atomicdropsx"))
 

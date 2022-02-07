@@ -3,25 +3,15 @@ import time
 import json
 import threading
 
-
 import socketio
-
-
-from eospy.cleos import Cleos
-
-from api.api import Api
-
-from account import Account, Accounts
-from drop import AtomicDrop, NeftyDrop
-
-from tasks import update_accounts_data
-from tasks import claim_drop
-
 
 from redis_client import get_redis_client
 
 from settings import Settings
 import config
+
+from tasks.accounts import update_accounts_data
+from tasks.drops import claim_drop
 
 
 settings = Settings()
