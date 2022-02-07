@@ -32,8 +32,8 @@
                 {% elif contract_account == "atomicdropsx" %}
                     <td>{{ account.atomic_drop_balance }}</td>
                 {% endif %}
-                <td>{{ round(account.cpu, 2) }}%</td>
-                <td>{{ round(account.ram, 2) }}%</td>
+                <td>{{ account.cpu }}%</td>
+                <td>{{ account.ram }}%</td>
                 <td>...{{ account.private_token[-10:] }}</td>
             </tr>
         {% endfor %}
