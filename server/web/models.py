@@ -26,6 +26,7 @@ class AccountModel(db.Model):
     cpu = db.Column(db.Float)
     ram = db.Column(db.Float)
     update_time = db.Column(db.DateTime, default=datetime.now())
+    rpc = db.Column(db.String(), nullable=False)
 
     # disabled = False
 

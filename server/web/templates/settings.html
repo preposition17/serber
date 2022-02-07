@@ -29,7 +29,7 @@
                         <div class="form-group">
                             {% if item.is_input %}
                                 <input type="text" class="form-control" id="{{ item.key }}_input"
-                                       name="{{ item.key }}_input" placeholder="{{ item.value }}">
+                                       name="{{ item.key }}" placeholder="{{ item.value }}">
 
                             {% elif item.is_select %}
                                 {% set value = json_loads(item.value) %}

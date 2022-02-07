@@ -18,7 +18,7 @@ def update_accounts_data(settings):
     api = Api(url=settings.rpc_url)
 
     with Session() as db_session:
-        accounts = db_session.query(models.WaxAccount).all()
+        accounts = db_session.query(models.WaxAccount).filter_by(rpc=settings.rpc_url).all()
         for account in accounts:
             account_inst = Account(api, cleos, account.private_token)
             account_data = account_inst.full_data
@@ -33,13 +33,18 @@ def update_accounts_data(settings):
 
 
 def claim_drop(settings, drop_ids, accounts_keys, sio):
-    cleos = Cleos(url=settings.rpc_url)
-    api = Api(url=settings.rpc_url)
+    # SETTINGS
+    contract_account = settings.contract_account
+    rpc_url = settings.rpc_url
+    claim_time = int(settings.claim_time)
+
+    cleos = Cleos(url=rpc_url)
+    api = Api(url=rpc_url)
 
     sio.emit("debug_script", "* Claimdrop task received")
-    if settings.contract_account == "neftyblocksd":
+    if contract_account == "neftyblocksd":
         drops = [NeftyDrop(cleos, drop_id) for drop_id in drop_ids]
-    elif settings.contract_account == "atomicdropsx":
+    elif contract_account == "atomicdropsx":
         drops = [AtomicDrop(cleos, drop_id) for drop_id in drop_ids]
     else:
         sio.emit("debug_script", "! Error while drops initializing")
@@ -59,7 +64,7 @@ def claim_drop(settings, drop_ids, accounts_keys, sio):
             print("The drop has not started yet, waiting...")
             sio.emit("debug_script", "* The drop has not started yet, waiting...")
 
-        while drop.start_time - time.time() > 0:
+        while drop.start_time - time.time() > claim_time:
             continue
 
         accounts.claim_all(drop)

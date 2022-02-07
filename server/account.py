@@ -17,6 +17,7 @@ class Account:
         self.private_key = private_key
         self.key = EOSKey(private_key)
         self.public_key = self.key.to_public()
+        print(self.public_key)
         self.name = api.get_account(self.public_key)["account"]["account_name"]
 
         self.assets = None

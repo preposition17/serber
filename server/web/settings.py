@@ -26,12 +26,14 @@ def settings_view():
 
 @settings.route("/set", methods=["POST"])
 def set():
-    settings = request.form.to_dict()
+    _settings = request.form.to_dict()
+    print(_settings)
 
-    for setting_key in settings.keys():
-        setting = SettingsModel.query.filter_by(key=setting_key).first()
-        setting.current = settings[setting_key]
-        db.session.commit()
+    for setting_key in _settings.keys():
+        if _settings[setting_key] and _settings[setting_key] != "":
+            setting = SettingsModel.query.filter_by(key=setting_key).first()
+            setting.current = _settings[setting_key]
+            db.session.commit()
 
     return redirect(url_for("settings.settings_view"))
 

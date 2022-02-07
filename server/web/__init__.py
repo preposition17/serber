@@ -6,8 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
-from eospy.cleos import Cleos
-from api.api import Api
 import redis
 
 from .utils import check_db_file
@@ -20,8 +18,6 @@ migrate = Migrate()
 url = "https://testnet.waxsweden.org"
 contract_account = "neftyblocksd"
 
-ce = Cleos(url=url)
-api = Api(url=url)
 redis_client = redis.Redis()
 
 

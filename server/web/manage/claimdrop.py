@@ -17,10 +17,10 @@ claimdrop = Blueprint('claimdrop', __name__)
 @claimdrop.route("/claimdrop")
 def claimdrop_view():
     session["last_url"] = url_for("manage.claimdrop.claimdrop_view")
-    accounts = AccountModel.query.all()
     settings = Settings()
+    accounts = AccountModel.query.filter_by(rpc=settings.rpc_url.current).all()
 
     return render_template("manage/claimdrop.html",
                            accounts=accounts,
-                           current_contract = settings.contract_account.current
+                           current_contract=settings.contract_account.current
                            )

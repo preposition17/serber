@@ -1,15 +1,9 @@
 from flask import Blueprint
 from flask import render_template
-from flask import current_app
 
 from .models import AccountModel
-from .models import Settings
 
-from . import api
-from . import ce
-from . import contract_account      # TODO: change to import from db
-
-from account import Account
+from .settings import Settings
 
 
 main = Blueprint('main', __name__)
@@ -17,8 +11,12 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index_view():
-    accounts = AccountModel.query.all()
+    settings = Settings()
+    rpc_url = settings.rpc_url.current
+    contract_account = settings.contract_account.current
+    accounts = AccountModel.query.filter_by(rpc=rpc_url).all()
     return render_template("index.html",
+                           rpc_url=rpc_url,
                            contract_account=contract_account,
                            accounts=accounts)
 
